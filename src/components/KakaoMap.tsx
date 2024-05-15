@@ -1,76 +1,114 @@
 'use client';
-import { getGeolocation } from '@/utilities/getGeolocation';
-import useKakaoMapLoader from '@/hooks/useKakaoMapLoader';
-import { useEffect, useState } from 'react';
-import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
+
+import useGeolocation from '@/hooks/useGeolocation';
+import { Map, MapMarker, MapMarkerProps, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
+import { useEffect, useRef, useState, useDeferredValue } from 'react';
+
+import { MapMarkerState, MapState, Position } from '@/types/KakaoMap';
 
 export default function KakaoMap() {
-	useKakaoMapLoader();
-	const [mapLocation, setMapLocation] = useState({
-		lat: 0,
-		lng: 0,
-	});
-	console.log(mapLocation);
-	const [mapError, setMapError] = useState<string | null>(null);
+	// useGeolocation Custom Hook로 현재 위치 로딩 상태, 위치, 그리고 에러 반환
+	const kakaoMapRef = useRef<null | kakao.maps.Map>(null);
+	const options: PositionOptions = { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 };
+	const [geolocationLoading, geolocationPosition, geolocationError, refreshGeolocation] = useGeolocation(options);
+	const [myLocationPin, setMyLocationPin] = useState<null | MapMarkerState>(null);
+
+	const [mapState, setMapState] = useState<MapState | null>(null);
 
 	useEffect(() => {
-		function onSuccess(position: GeolocationPosition) {
-			const { latitude, longitude } = position.coords;
-			console.log(position.coords);
-			setMapLocation({ lat: latitude, lng: longitude });
-			setMapError(null);
-		}
-		function onError(error: GeolocationPositionError) {
-			setMapLocation({
-				// 지도의 중심좌표
-				lat: 37.54699,
-				lng: 127.09598,
+		if (geolocationPosition) {
+			setMapState((prev) => {
+				return { ...prev, center: geolocationPosition, isPanto: true, level: 2 };
 			});
-			setMapError(error.message);
 		}
-		try {
-			getGeolocation(onSuccess, onError, { timeout: 100 });
-		} catch (error) {
-			console.log(error);
+	}, [geolocationPosition]);
+
+	const initiateMapState = (map: kakao.maps.Map) => {
+		console.log('map initiated');
+	};
+
+	const dropMyLocationPin = () => {
+		if (geolocationPosition) {
+			setMyLocationPin((prev) => {
+				return { ...prev, position: geolocationPosition, title: '현재 위치' };
+			});
+		} else {
+			console.log('no geo');
 		}
-	}, []);
+	};
+
+	const removeMyLocationPin = () => {
+		setMyLocationPin(null);
+	};
+
+	const centerMapToMyLocation = () => {
+		refreshGeolocation();
+		dropMyLocationPin();
+	};
+
+	const updateMapState = (map: kakao.maps.Map) => {
+		const newCenter = {
+			lat: map.getCenter().getLat(),
+			lng: map.getCenter().getLng(),
+		};
+		const newLevel = map.getLevel();
+
+		setMapState((prev) => {
+			return { ...prev, center: newCenter, level: newLevel, isPanto: true };
+		});
+	};
 
 	return (
 		<div>
-			<div>{mapError}</div>
-			<Map // 지도를 표시할 Container
-				center={mapLocation}
-				isPanto={true}
-				style={{
-					// 지도의 크기
-					width: '100%',
-					height: '400px',
-				}}
-				level={3} // 지도의 확대 레벨
-			>
-				<MapTypeControl position={'TOPRIGHT'} />
-				<ZoomControl position={'RIGHT'} />
-				{/* {myLocation.show && (
-					<MapMarker // 마커를 생성합니다
-						position={mapLocation}
-						image={{
-							src: '/icons/my-location.png', // 마커이미지의 주소입니다
-							size: {
-								width: 20,
-								height: 20,
-							}, // 마커이미지의 크기입니다
-							options: {
-								offset: {
-									x: 10,
-									y: 10,
-								}, // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-							},
-						}}
-					/>
-				)} */}
-			</Map>
-			{/* <button onClick={panToMyLocation}>Find My Location</button>
-			{myLocation.loading && <div>LOADING...</div>} */}
+			{mapState && (
+				<Map
+					ref={kakaoMapRef}
+					center={mapState.center}
+					level={mapState.level}
+					isPanto={mapState.isPanto}
+					style={{
+						width: '100%',
+						height: 400,
+					}}
+					onCreate={initiateMapState}
+					onIdle={updateMapState}>
+					<MapTypeControl position={'TOPRIGHT'} />
+					<ZoomControl position={'RIGHT'} />
+
+					{myLocationPin && (
+						<MapMarker
+							key={`${myLocationPin.position.lat}-${myLocationPin.position.lng}`}
+							position={myLocationPin.position}
+							image={{
+								src: '/icons/my-location-pin.png',
+								size: {
+									width: 20,
+									height: 20,
+								},
+								options: {
+									offset: {
+										y: 10,
+										x: 0,
+									},
+								},
+							}}
+							title={myLocationPin.title}
+						/>
+					)}
+				</Map>
+			)}
+
+			<div>{geolocationLoading && 'loading...'}</div>
+			<div>{geolocationError}</div>
+			<div>
+				{mapState?.center.lat} : {mapState?.center.lng}
+			</div>
+			<div className='map-controls'>
+				<div className='map-controls__geolocation'>
+					<button onClick={centerMapToMyLocation}>내 위치 찾기로 이동</button>
+					<button onClick={removeMyLocationPin}>Remove Pin</button>
+				</div>
+			</div>
 		</div>
 	);
 }
