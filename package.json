@@ -1,24 +1,29 @@
 {
-  "name": "clothing-bin-locator",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "14.2.3",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-kakao-maps-sdk": "^1.1.26"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "kakao.maps.d.ts": "^0.1.39",
-    "typescript": "^5"
-  }
+	"name": "clothing-bin-locator",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@next/env": "^14.2.3",
+		"mysql2": "^3.9.7",
+		"next": "14.2.3",
+		"react": "^18",
+		"react-dom": "^18",
+		"react-icons": "^5.2.1",
+		"react-kakao-maps-sdk": "^1.1.26"
+	},
+	"devDependencies": {
+		"@types/mysql": "^2.15.26",
+		"@types/node": "^20.12.12",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"kakao.maps.d.ts": "^0.1.39",
+		"sequelize-cli": "^6.6.2",
+		"typescript": "^5"
+	}
 }

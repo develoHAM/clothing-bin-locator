@@ -1,17 +1,23 @@
-const onSuccess = (position: GeolocationPosition) => {
-	const { latitude, longitude } = position.coords;
-	return { position: { lat: latitude, lng: longitude }, error: null };
-};
+export function getGeolocation(options?: {
+	timeout?: number;
+	maximumAge?: number;
+	enableHighAccuracy?: boolean;
+}): Promise<[{ latitude: number; longitude: number }, null] | [null, string]> {
+	return new Promise((resolve, reject) => {
+		if (!navigator.geolocation) {
+			resolve([null, 'please enable GPS']);
+		}
+		const { geolocation } = navigator;
 
-const onError = (error: GeolocationPositionError) => {
-	return { position: null, error: error.message };
-};
+		const onSuccess = (position: GeolocationPosition) => {
+			const { latitude, longitude } = position.coords;
+			resolve([{ latitude, longitude }, null]);
+		};
 
-export function getGeolocation(options?: { timeout?: number; maximumAge?: number; enableHighAccuracy?: boolean }) {
-	if (!navigator.geolocation) {
-		return { position: null, error: 'please enable GPS' };
-	}
-	const { geolocation } = navigator;
+		const onError = (error: GeolocationPositionError) => {
+			resolve([null, error.message]);
+		};
 
-	geolocation.getCurrentPosition(onSuccess, onError, options);
+		geolocation.getCurrentPosition(onSuccess, onError, options);
+	});
 }
