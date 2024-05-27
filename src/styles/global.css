@@ -85,13 +85,17 @@
 	color: black;
 }
 
+.map-container {
+	min-height: 350px;
+}
 .map {
 	border-radius: 10px;
+	min-height: 350px;
 }
 
 .map-button_container-update_my_location_button {
 	position: absolute;
-	top: calc(var(--page-padding) + 280px);
+	top: calc(var(--page-padding) + 240px);
 	right: calc(var(--page-padding) + 3px);
 	z-index: 4;
 	width: 32px;
@@ -119,7 +123,7 @@
 
 .map-button_container-delete_my_location_button {
 	position: absolute;
-	top: calc(var(--page-padding) + 320px);
+	top: calc(var(--page-padding) + 276px);
 	right: calc(var(--page-padding) + 3px);
 	z-index: 4;
 	width: 32px;

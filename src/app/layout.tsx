@@ -1,7 +1,4 @@
-'use client';
 import '../styles/global.css';
-import { IoIosMail } from 'react-icons/io';
-import { FaGithub } from 'react-icons/fa';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
