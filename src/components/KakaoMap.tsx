@@ -1,6 +1,5 @@
 'use client';
 
-import useKakaoMapLoader from '@/hooks/useKakaoMapLoader';
 import { KakaoMapProps, Position } from '@/types/KakaoMap';
 import { getGeolocation } from '@/utilities/getGeolocation';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ import { MdLocationDisabled } from 'react-icons/md';
 import { BinModel } from '@/types/Models';
 
 export default function KakaoMap({ data }: KakaoMapProps) {
-	useKakaoMapLoader();
 	const [map, setMap] = useState<kakao.maps.Map | null>(null);
 	const [myLocation, setMyLocation] = useState({ show: false, position: { lat: 0, lng: 0 } });
 	const [loading, setLoading] = useState(false);

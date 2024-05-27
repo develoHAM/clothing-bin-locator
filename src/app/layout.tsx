@@ -1,10 +1,15 @@
 import '../styles/global.css';
-
+import Script from 'next/script';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='ko'>
 			<title>의류 수거함 위치 찾기</title>
 			<body className='site-body'>
+				<Script
+					src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_APP_JS_KEY}&libraries=services,clusterer&autoload=false`}
+					strategy='beforeInteractive'
+				/>
+
 				<header className='site-header'>
 					<h3>서울시 의류 수거함 위치 현황</h3>
 				</header>
