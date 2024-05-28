@@ -39,7 +39,6 @@ export default function KakaoMap({ data }: KakaoMapProps) {
 
 	const onMarkerClick = (marker: kakao.maps.Marker, bin: BinModel) => {
 		map?.panTo(marker.getPosition());
-
 		setOpenMarker((prev) => ({
 			...prev,
 			position: { lat: bin.latitude, lng: bin.longitude },
@@ -72,29 +71,29 @@ export default function KakaoMap({ data }: KakaoMapProps) {
 				className='map'
 				center={{ lat: 37.5519, lng: 126.9918 }}
 				level={8}
-				minLevel={10}
+				minLevel={8}
 				style={{
 					width: '100%',
 					height: '80vh',
 				}}
-				onCreate={(map: kakao.maps.Map) => setMap(map)}>
+				onCreate={(map: kakao.maps.Map) => setMap(map)}
+				onIdle={(map: kakao.maps.Map) => console.log(map.getBounds())}>
 				<MapTypeControl position={'TOPRIGHT'} />
 				<ZoomControl position={'RIGHT'} />
-				{map && (
-					<MarkerClusterer averageCenter={true} minLevel={3} disableClickZoom={false} gridSize={100}>
-						{data &&
-							data.length > 0 &&
-							data.map((bin) => (
-								<MapMarker
-									key={`${bin.id}-${bin.latitude}-${bin.longitude}`}
-									position={{
-										lat: bin.latitude,
-										lng: bin.longitude,
-									}}
-									onClick={(marker: kakao.maps.Marker) => {
-										onMarkerClick(marker, bin);
-									}}></MapMarker>
-							))}
+				{map && data && data.length > 0 && (
+					<MarkerClusterer averageCenter={true} minLevel={3} disableClickZoom={false} gridSize={120}>
+						{data.map((bin) => (
+							<MapMarker
+								key={`${bin.id}-${bin.latitude}-${bin.longitude}`}
+								position={{
+									lat: bin.latitude,
+									lng: bin.longitude,
+								}}
+								onClick={(marker: kakao.maps.Marker) => {
+									onMarkerClick(marker, bin);
+								}}
+							/>
+						))}
 					</MarkerClusterer>
 				)}
 

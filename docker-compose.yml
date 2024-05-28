@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+    clothing-bin-locator:
+        container_name: clothing-bin-locator
+        image: develoham/clothing-bin-locator:latest
+        build: .
+        ports:
+            - '3000:3000'
