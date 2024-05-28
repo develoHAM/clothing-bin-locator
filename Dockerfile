@@ -17,15 +17,26 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
+
+ARG KAKAO_APP_JS_KEY
+ARG KAKAO_REST_API_KEY
+ARG RDS_USERNAME
+ARG RDS_PASSWORD
+ARG RDS_DATABASE
+ARG RDS_PORT
+ARG RDS_HOST
+
+ENV KAKAO_APP_JS_KEY=$KAKAO_APP_JS_KEY
+ENV KAKAO_REST_API_KEY=$KAKAO_REST_API_KEY
+ENV RDS_USERNAME=$RDS_USERNAME
+ENV RDS_PASSWORD=$RDS_PASSWORD
+ENV RDS_DATABASE=$RDS_DATABASE
+ENV RDS_PORT=$RDS_PORT
+ENV RDS_HOST=$RDS_HOST
 
 RUN npm run build
 
-# If using npm comment out above and use below instead
-# RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

@@ -35,7 +35,20 @@ jobs:
                   npm install
                   npm run build
 
-            - name: Build and push Docker image for linux/amd64
+            - name: Build Docker image
+              run: |
+                  docker build \
+                    --build-arg KAKAO_APP_JS_KEY="${KAKAO_APP_JS_KEY}" \
+                    --build-arg KAKAO_REST_API_KEY="${KAKAO_REST_API_KEY}" \
+                    --build-arg RDS_USERNAME="${RDS_USERNAME}" \
+                    --build-arg RDS_PASSWORD="${RDS_PASSWORD}" \
+                    --build-arg RDS_DATABASE="${RDS_DATABASE}" \
+                    --build-arg RDS_PORT="${RDS_PORT}" \
+                    --build-arg RDS_HOST="${RDS_HOST}" \
+                    -t ${{ secrets.DOCKER_USERNAME }}/clothing-bin-locator:latest \
+                    .
+
+            - name: Push Docker image for linux/amd64
               uses: docker/build-push-action@v5
               with:
                   context: .
