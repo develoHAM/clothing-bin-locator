@@ -22,7 +22,8 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Set Environment Variables
+            # Set Environment Variables and run npm build
+            - name: Set Environment Variables and build
               env:
                   KAKAO_APP_JS_KEY: ${{ secrets.KAKAO_APP_JS_KEY }}
                   KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
@@ -31,25 +32,26 @@ jobs:
                   RDS_DATABASE: ${{ secrets.RDS_DATABASE }}
                   RDS_PORT: ${{ secrets.RDS_PORT }}
                   RDS_HOST: ${{ secrets.RDS_HOST }}
-                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
               run: |
                   npm install
                   npm run build
 
+            # Build Docker image
             - name: Build Docker image
               run: |
                   docker build \
-                    --build-arg KAKAO_APP_JS_KEY="${{ env.KAKAO_APP_JS_KEY}}" \
-                    --build-arg KAKAO_REST_API_KEY="${{ env.KAKAO_REST_API_KEY}}" \
-                    --build-arg RDS_USERNAME="${{ env.RDS_USERNAME}}" \
-                    --build-arg RDS_PASSWORD="${{ env.RDS_PASSWORD}}" \
-                    --build-arg RDS_DATABASE="${{ env.RDS_DATABASE}}" \
-                    --build-arg RDS_PORT="${{ env.RDS_PORT}}" \
-                    --build-arg RDS_HOST="${{ env.RDS_HOST}}" \
+                    --build-arg KAKAO_APP_JS_KEY='${KAKAO_APP_JS_KEY}' \
+                    --build-arg KAKAO_REST_API_KEY='${KAKAO_REST_API_KEY}' \
+                    --build-arg RDS_USERNAME='${RDS_USERNAME}' \
+                    --build-arg RDS_PASSWORD='${RDS_PASSWORD}' \
+                    --build-arg RDS_DATABASE='${RDS_DATABASE}' \
+                    --build-arg RDS_PORT='${RDS_PORT}' \
+                    --build-arg RDS_HOST='${RDS_HOST}' \
                     -t ${{ secrets.DOCKER_USERNAME }}/clothing-bin-locator:latest \
                     .
 
-            - name: Push Docker image for linux/amd64
+            # Push Docker image
+            - name: Push Docker image
               uses: docker/build-push-action@v5
               with:
                   context: .
