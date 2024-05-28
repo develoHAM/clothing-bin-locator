@@ -1,9 +1,20 @@
 import '../styles/global.css';
 import Script from 'next/script';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: '서울시 의류 수거함 위치 현황',
+	applicationName: 'clothing-bin-locator',
+	keywords: ['의류 수거함', '서울시', '지도', '현재 위치', '의류 수거함 위치', '서울시 의류 수거함 위치'],
+	description: '서울시에 있는 의류 수거함들의 위치를 지도에 표시하는 서비스',
+	publisher: 'develoHAM',
+	creator: 'develoHAM',
+	authors: [{ name: 'develoHAM', url: 'https://github.com/develoHAM' }],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='ko'>
-			<title>서울시 의류 수거함 위치 찾기</title>
 			<body className='site-body'>
 				<Script
 					src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_APP_JS_KEY}&libraries=services,clusterer&autoload=false`}
