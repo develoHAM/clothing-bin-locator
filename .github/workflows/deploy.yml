@@ -38,13 +38,13 @@ jobs:
             - name: Build Docker image
               run: |
                   docker build \
-                    --build-arg KAKAO_APP_JS_KEY="${KAKAO_APP_JS_KEY}" \
-                    --build-arg KAKAO_REST_API_KEY="${KAKAO_REST_API_KEY}" \
-                    --build-arg RDS_USERNAME="${RDS_USERNAME}" \
-                    --build-arg RDS_PASSWORD="${RDS_PASSWORD}" \
-                    --build-arg RDS_DATABASE="${RDS_DATABASE}" \
-                    --build-arg RDS_PORT="${RDS_PORT}" \
-                    --build-arg RDS_HOST="${RDS_HOST}" \
+                    --build-arg KAKAO_APP_JS_KEY="${{ secrets.KAKAO_APP_JS_KEY}}" \
+                    --build-arg KAKAO_REST_API_KEY="${{ secrets.KAKAO_REST_API_KEY}}" \
+                    --build-arg RDS_USERNAME="${{ secrets.RDS_USERNAME}}" \
+                    --build-arg RDS_PASSWORD="${{ secrets.RDS_PASSWORD}}" \
+                    --build-arg RDS_DATABASE="${{ secrets.RDS_DATABASE}}" \
+                    --build-arg RDS_PORT="${{ secrets.RDS_PORT}}" \
+                    --build-arg RDS_HOST="${{ secrets.RDS_HOST}}" \
                     -t ${{ secrets.DOCKER_USERNAME }}/clothing-bin-locator:latest \
                     .
 
