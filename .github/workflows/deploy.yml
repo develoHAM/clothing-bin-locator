@@ -46,7 +46,7 @@ jobs:
                     --build-arg RDS_DATABASE="${{ env.RDS_DATABASE}}" \
                     --build-arg RDS_PORT="${{ env.RDS_PORT}}" \
                     --build-arg RDS_HOST="${{ env.RDS_HOST}}" \
-                    -t ${{ env.DOCKER_USERNAME }}/clothing-bin-locator:latest \
+                    -t ${{ secrets.DOCKER_USERNAME }}/clothing-bin-locator:latest \
                     .
 
             - name: Push Docker image for linux/amd64
